@@ -12,13 +12,13 @@ Array::Array() {
     size = 0;
 }
 
-Array::Array(int s) {
-    size = s;
-    arr = new int[size];
-    for(int i = 0; i < size; i++) {
-        arr[i] = i;
-    }
-}
+//Array::Array(int s) {
+//    size = s;
+//    arr = new int[size];
+//    for(int i = 0; i < size; i++) {
+//        arr[i] = i;
+//    }
+//}
 
 Array::~Array() {
     delete [] arr;
@@ -29,9 +29,8 @@ void Array::print() {
         for(int i = 0; i < size; i++) {
             std::cout << arr[i] << " ";
         }
-        std::cout << std::endl;
     } else {
-        //throw("Array not initialized!");
+        throw(not_init_exc);
     }
 }
 
@@ -46,6 +45,8 @@ void Array::insert_front(int data) {
         delete [] arr;
         size++;
         arr = temp;
+    } else {
+        throw(not_init_exc);
     }
 }
 
@@ -60,6 +61,8 @@ void Array::insert_end(int data) {
         delete [] arr;
         size++;
         arr = temp;
+    } else {
+        throw(not_init_exc);
     }
 }
 
@@ -80,11 +83,11 @@ void Array::insert_at(int data, int position) {
                 size++;
                 arr = temp;
             } else {
-                //throw("Wrong index!");
+                throw(position_exc);
             }
         }
     } else {
-        //throw("Array not initialized!");
+        throw(not_init_exc);
     }
 }
 
@@ -98,7 +101,7 @@ void Array::delete_front() {
         delete [] arr;
         arr = temp;
     } else {
-        throw("Array not initialized!");
+        throw(not_init_exc);
     }
 }
 
@@ -112,7 +115,7 @@ void Array::delete_end() {
         delete [] arr;
         arr = temp;
     } else {
-        throw("Array not initialized!");
+        throw(not_init_exc);
     }
 }
 
@@ -131,11 +134,11 @@ void Array::delete_at(int position) {
                 delete [] arr;
                 arr = temp;
             } else {
-                throw ("Wrong index!");
+                throw (position_exc);
             }
         }
     } else {
-        throw("Array not initialized!");
+        throw(not_init_exc);
     }
 }
 
@@ -146,7 +149,7 @@ bool Array::find(int data) {
         }
         return false;
     } else {
-        throw("Array not initialized!");
+        throw(not_init_exc);
     }
 }
 
@@ -165,6 +168,8 @@ void Array::load_from_file(std::string filename) {
         arr = temp;
 
         file.close();
+    } else {
+        throw(file_exc);
     }
 
 }
@@ -184,7 +189,7 @@ void Array::generate_array(int s, std::mt19937 generator) {
         delete [] arr;
         arr = temp;
     } else {
-        throw("Wrong size!");
+        throw(size_exc);
     }
 }
 

@@ -9,6 +9,7 @@
 
 using namespace std;
 
+void menu_table(mt19937 generator);
 void menu_list(mt19937 generator);
 
 int main() {
@@ -30,7 +31,7 @@ int main() {
 
         switch (option){
             case '1':
-                //menu_table();
+                menu_table(generator);
                 break;
 
             case '2':
@@ -63,8 +64,105 @@ void displayMenu(string info)
     cout << "Podaj opcje:";
 }
 
+void menu_table(mt19937 generator)
+{
+    Array* arr = new Array();
+    char opt;
+    string fileName;
+    int index, value;
+
+    do{
+        displayMenu("--- TABLICA ---");
+        opt = getche();
+        cout << endl;
+        switch (opt){
+            case '1': //tutaj wczytytwanie  tablicy z pliku
+                cout << " Podaj nazwę zbioru:";
+                cin >> fileName;
+
+                try {
+                    arr->load_from_file(fileName);
+                    cout << "Wczytano z pliku." << endl;
+                    break;
+                } catch (string &e) {
+                    cout << e << endl;
+                    break;
+                }
+
+
+            case '2': //tutaj usuwanie elemenu z tablicy
+                cout << "Podaj indeks: ";
+                cin >> index;
+
+                try {
+                    arr->delete_at(index);
+                    cout << "Usunieto." << endl;
+                    break;
+                } catch (string &e) {
+                    cout << e << endl;
+                    break;
+                }
+
+            case '3': //tutaj dodawanie elemetu do tablicy
+                cout << "Podaj indeks: ";
+                cin >> index;
+                cout << "Podaj wartosc: ";
+                cin >> value;
+
+                try {
+                    arr->insert_at(value, index);
+                    cout << "Dodano." << endl;
+                    break;
+                } catch (string &e) {
+                    cout << e << endl;
+                    break;
+                }
+
+            case '4': //tutaj znajdowanie elemetu w tablicy
+                cout << "Podaj wartosc: ";
+                cin >> value;
+
+                try {
+                    arr->find(value) ? cout << "Znaleziono podana wartosc." << endl : cout << "Nie znalezniono podanej wartosci." << endl;
+                    break;
+                } catch (string &e) {
+                    cout << e << endl;
+                    break;
+                }
+
+            case '5':  //tutaj generowanie  tablicy
+                cout << "Podaj ilosc elementow tablicy: ";
+                cin >> value;
+
+                try {
+                    arr->generate_array(value, generator);
+                    cout << "Utworzono tablice." << endl;
+                    break;
+                } catch (string &e) {
+                    cout << e << endl;
+                    break;
+                }
+
+            case '6':  //tutaj wyświetlanie tablicy
+                try {
+                    arr->print();
+                    cout << endl;
+                    break;
+                } catch (string &e) {
+                    cout << e << endl;
+                }
+
+            case '7': //tutaj nasza funkcja do eksperymentów (pomiary czasów i generowanie daneych) - nie będzie testowana przez prowadzącego
+                // można sobie tu dodać własne case'y
+                break;
+        }
+
+    } while (opt != '0');
+    delete arr;
+}
+
 void menu_list(mt19937 generator) {
-    DoublyLinkedList* list = nullptr;
+    DoublyLinkedList* list = new DoublyLinkedList();
     char opt;
     string file_name;
     int index, value;
@@ -75,62 +173,79 @@ void menu_list(mt19937 generator) {
         cout << endl;
         switch(opt) {
             case '1': // load from file
-                cout << "Podaj nazwe zbioru: ";
-                cin >> file_name;
-                list = new DoublyLinkedList();
-                list->load_from_file(file_name);
-                break;
+                try {
+                    cout << "Podaj nazwe zbioru: ";
+                    cin >> file_name;
+                    list->load_from_file(file_name);
+                    cout << "Wczytano z pliku." << endl;
+                    break;
+                } catch (string &e) {
+                    cout << e << endl;
+                    break;
+                }
 
             case '2': // delete node
-                if(!list) {
-                    cout << "Nie wczytano listy." << endl;
-                    break;
-                } else {
+                try{
                     cout << "Podaj indeks: ";
                     cin >> index;
                     list->delete_at(index);
+                    cout << "Usunieto." << endl;
+                    break;
+                } catch (string &e) {
+                    cout << e << endl;
                     break;
                 }
 
             case '3': // insert node
-                if(!list) {
-                    cout << "Nie wczytano listy." << endl;
-                    break;
-                } else {
-                    cout << "Podaj indeks: ";
-                    cin >> index;
-                    cout << "Podaj wartosc: ";
-                    cin >> value;
+                cout << "Podaj indeks: ";
+                cin >> index;
+                cout << "Podaj wartosc: ";
+                cin >> value;
+
+                try {
                     list->insert_at(value, index);
+                    cout << "Dodano wartosc." << endl;
+                    break;
+                } catch (string &e) {
+                    cout << e << endl;
                     break;
                 }
 
             case '4': // find
-                if(!list) {
-                    cout << "Nie wczytano listy." << endl;
+                cout << "Podaj wartosc: ";
+                cin >> value;
+
+                try {
+                    list->find(value) ? cout << "Znaleziono podana wartosc." << endl : cout << "Nie znaleziono podanej wartosci." << endl;
                     break;
-                } else {
-                    cout << "Podaj wartosc: ";
-                    cin >> value;
-                    list->find(value);
+                } catch(string &e) {
+                    cout << e << endl;
                     break;
                 }
+
 
             case '5': // create list
                 cout << "Podaj ilosc elementow listy: ";
                 cin >> value;
-                list = new DoublyLinkedList();
-                list->generate_list(value, generator);
-                break;
+
+                try {
+                    list->generate_list(value, generator);
+                    cout << "Utworzono liste." << endl;
+                    break;
+                } catch (string &e) {
+                    cout << e << endl;
+                    break;
+                }
+
 
             case '6': // print list
-                if(!list) {
-                    cout << "Nie wczytano listy." << endl;
-                    break;
-                } else {
+                try {
                     list->print_forward();
+                    cout << endl;
                     list->print_backward();
-                    break;
+                    cout << endl;
+                } catch (string &e) {
+                    cout << e << endl;
                 }
         }
     } while(opt != '0');

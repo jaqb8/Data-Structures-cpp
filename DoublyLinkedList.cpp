@@ -13,42 +13,41 @@ DoublyLinkedList::DoublyLinkedList() {
     tail = nullptr;
 }
 
-DoublyLinkedList::DoublyLinkedList(int length) {
-    int data;
-    Node* new_node;
-
-    if(length > 0) {
-        std::cout << "Podaj wartosc dla pierwszego wezla: ";
-        std::cin >> data;
-        head = new Node(data);
-
-        // first node
-        if(head != nullptr) {
-            head->previous = nullptr;
-            head->next = nullptr;
-            tail = head;
-        }
-
-        // rest of n-1 nodes
-        for(int i = 2; i <= length; i++) {
-            std::cout << "Podaj wartosc dla wezla nr " << i << ": ";
-            std::cin >> data;
-            new_node = new Node(data);
-
-            if(new_node != nullptr) {
-                new_node->previous = tail;
-                new_node->next = nullptr;
-                tail->next = new_node;
-                tail = new_node;
-            }
-        }
-    }
-    std::cout << "Pomyslnie utworzono liste!" << std::endl;
-}
+//DoublyLinkedList::DoublyLinkedList(int length) {
+//    int data;
+//    Node* new_node;
+//
+//    if(length > 0) {
+//        std::cout << "Podaj wartosc dla pierwszego wezla: ";
+//        std::cin >> data;
+//        head = new Node(data);
+//
+//        // first node
+//        if(head != nullptr) {
+//            head->previous = nullptr;
+//            head->next = nullptr;
+//            tail = head;
+//        }
+//
+//        // rest of n-1 nodes
+//        for(int i = 2; i <= length; i++) {
+//            std::cout << "Podaj wartosc dla wezla nr " << i << ": ";
+//            std::cin >> data;
+//            new_node = new Node(data);
+//
+//            if(new_node != nullptr) {
+//                new_node->previous = tail;
+//                new_node->next = nullptr;
+//                tail->next = new_node;
+//                tail = new_node;
+//            }
+//        }
+//    }
+//    std::cout << "Pomyslnie utworzono liste!" << std::endl;
+//}
 
 DoublyLinkedList::~DoublyLinkedList() {
     Node* to_delete;
-
     while(head != nullptr) {
         to_delete = head;
         head = head->next;
@@ -57,29 +56,38 @@ DoublyLinkedList::~DoublyLinkedList() {
 }
 
 void DoublyLinkedList::print_forward() {
-    Node* temp = head;
 
-    while(temp != nullptr) {
-        std::cout << temp->data << " ";
-        temp = temp->next;
+    if (head != nullptr) {
+        Node* temp = head;
+        while(temp != nullptr) {
+            std::cout << temp->data << " ";
+            temp = temp->next;
+        }
+    } else {
+        throw(not_init_exc);
     }
-    std::cout << std::endl;
+
 }
 
 void DoublyLinkedList::print_backward() {
-    Node* temp = tail;
 
-    while(temp != nullptr) {
-        std::cout << temp->data << " ";
-        temp = temp->previous;
+    if (tail != nullptr) {
+        Node* temp = tail;
+        while(temp != nullptr) {
+            std::cout << temp->data << " ";
+            temp = temp->previous;
+        }
+    } else {
+        throw(not_init_exc);
     }
-    std::cout << std::endl;
+
+
 }
 
 void DoublyLinkedList::insert_front(int data) {
     Node* new_node;
 
-    if(head == nullptr) std::cout << "Blad, lista jest pusta." << std::endl;
+    if(head == nullptr) throw(not_init_exc);
     else {
         new_node = new Node(data);
         new_node->previous = nullptr;
@@ -87,14 +95,13 @@ void DoublyLinkedList::insert_front(int data) {
         head->previous = new_node;
         head = new_node;
 
-        std::cout << "Pomyslnie dodatno wezel na poczatek listy." << std::endl;
     }
 }
 
 void DoublyLinkedList::insert_end(int data) {
     Node* new_node;
 
-    if(tail == nullptr) std::cout << "Blad, lista jest pusta." << std::endl;
+    if(tail == nullptr) throw(not_init_exc);
     else {
         new_node = new Node(data);
         new_node->previous = tail;
@@ -102,7 +109,6 @@ void DoublyLinkedList::insert_end(int data) {
         tail->next = new_node;
         tail = new_node;
 
-        std::cout << "Pomyslnie dodano wezel na koniec listy." << std::endl;
     }
 }
 
@@ -111,7 +117,7 @@ void DoublyLinkedList::insert_at(int data, int position) {
     Node* temp;
     int i;
 
-    if(head == nullptr) std::cout << "Blad, lista jest pusta." << std::endl;
+    if(head == nullptr) throw(not_init_exc);
     else {
         temp = head;
         i = 1;
@@ -135,9 +141,8 @@ void DoublyLinkedList::insert_at(int data, int position) {
 
             temp->next = new_node;
 
-            std::cout << "Pomyslnie dodano wezel na pozycji nr " << position << "." << std::endl;
         } else {
-            std::cout << "Blad, nieprawidlowa pozycja." << std::endl;
+            throw(position_exc);
         }
     }
 }
@@ -145,81 +150,89 @@ void DoublyLinkedList::insert_at(int data, int position) {
 void DoublyLinkedList::delete_front() {
     Node* to_delete;
 
-    if(head == nullptr) std::cout << "Blad, lista jest pusta." << std::endl;
+    if(head == nullptr) throw(not_init_exc);
     else {
         to_delete = head;
         head = head->next; // 2nd node is now head
         if(head != nullptr) head->previous = nullptr; // remove link to previous node
         delete to_delete;
-
-        std::cout << "Pomyslnie usunieto wezel z poczatku listy." << std::endl;
     }
 }
 
 void DoublyLinkedList::delete_end() {
     Node* to_delete;
 
-    if(tail == nullptr) std::cout << "Blad, lista jest pusta." << std::endl;
+    if(tail == nullptr) throw(not_init_exc);
     else {
         to_delete = tail;
         tail = tail->previous;
         if(tail != nullptr) tail->next = nullptr;
         delete to_delete;
-
-        std::cout << "Pomyslnie usunieto wezel z konca listy." << std::endl;
     }
 }
 
 void DoublyLinkedList::delete_at(int position) {
-    Node* current;
-    int i;
 
-    current = head;
+    if (head != nullptr) {
+        Node *current;
+        int i;
+        current = head;
 
-    // set position of current
-    for(i = 1; i < position && current != nullptr; i++) {
-        current = current->next;
-    }
+        // set position of current
+        for (i = 1; i < position && current != nullptr; i++) {
+            current = current->next;
+        }
 
-    if(position == 1) delete_front();
-    else if(current == tail) delete_end();
-    else if(current != nullptr){
-        current->previous->next = current->next;
-        current->next->previous = current->previous;
-        delete current;
+        if (position == 1) delete_front();
+        else if (current == tail) delete_end();
+        else if (current != nullptr) {
+            current->previous->next = current->next;
+            current->next->previous = current->previous;
+            delete current;
 
-        std::cout << "Pomyslnie usunieto wezel na pozycji nr " << position << "." << std::endl;
+        } else {
+            throw (position_exc);
+        }
     } else {
-        std::cout << "Blad, nieprawidlowa pozycja." << std::endl;
+        throw(not_init_exc);
     }
 }
 
-void DoublyLinkedList::find(int to_find) {
-    Node* current;
-    current = head;
+bool DoublyLinkedList::find(int to_find) {
 
-    while(current != nullptr) {
-        if(current->data == to_find) {
-            std::cout << "Znaleziono podana wartosc." << std::endl;
-            return;
+    if (head != nullptr) {
+        Node *current;
+        current = head;
+
+        while (current != nullptr) {
+            if (current->data == to_find) {
+                return true;
+            } else current = current->next;
+
+            return false;
         }
-        else current = current->next;
+    } else {
+        throw(not_init_exc);
     }
-    std::cout << "Nie znaleziono podanej wartosci." << std::endl;
 }
 
 void DoublyLinkedList::load_from_file(std::string filename) {
+    // delete old list
+    Node* to_delete;
+    while(head != nullptr) {
+        to_delete = head;
+        head = head->next;
+        delete to_delete;
+    }
+
     std::ifstream file(filename);
     Node* new_node;
     int size, data;
 
     if(file.is_open()) {
         file >> size;
-        std::cout << size << " - size" << std::endl;
         file >> data;
-        std::cout << data << " - data1" << std::endl;
         head = new Node(data);
-        std::cout << "lll" << std::endl;
 
         if(head != nullptr) {
             head->previous = nullptr;
@@ -229,7 +242,6 @@ void DoublyLinkedList::load_from_file(std::string filename) {
 
         for(int i = 2; i <= size; i++) {
             file >> data;
-            std::cout << data << " - data" << std::endl;
             new_node = new Node(data);
             new_node->previous = tail;
             new_node->next = nullptr;
@@ -237,10 +249,20 @@ void DoublyLinkedList::load_from_file(std::string filename) {
             tail = new_node;
         }
         file.close();
+    } else {
+        throw(file_exc);
     }
 }
 
 void DoublyLinkedList::generate_list(int size, std::mt19937 generator) {
+    // delete old list
+    Node* to_delete;
+    while(head != nullptr) {
+        to_delete = head;
+        head = head->next;
+        delete to_delete;
+    }
+
     std::uniform_int_distribution<uint32_t> r(1,100);
     int random = r(generator);
     Node* new_node;
@@ -263,5 +285,7 @@ void DoublyLinkedList::generate_list(int size, std::mt19937 generator) {
             tail->next = new_node;
             tail = new_node;
         }
+    } else {
+        throw(size_exc);
     }
 }

@@ -18,10 +18,14 @@ private:
     };
     Node* head;
     Node* tail;
+    std::string not_init_exc = "List not initialized!";
+    std::string position_exc = "Wrong position!";
+    std::string size_exc = "Wrong size!";
+    std::string file_exc = "Error - file not opened!";
 
 public:
     DoublyLinkedList();
-    DoublyLinkedList(int length);
+    //DoublyLinkedList(int length);
     ~DoublyLinkedList();
     void print_forward();
     void print_backward();
@@ -31,7 +35,7 @@ public:
     void delete_front();
     void delete_end();
     void delete_at(int position);
-    void find(int to_find);
+    bool find(int to_find);
     void load_from_file(std::string filename);
     void generate_list(int size, std::mt19937 generator);
 

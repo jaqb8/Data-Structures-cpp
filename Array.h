@@ -11,10 +11,14 @@ class Array {
 private:
     int *arr;
     int size;
+    std::string not_init_exc = "Array not initialized!";
+    std::string position_exc = "Wrong position!";
+    std::string file_exc = "Error - file not opened!";
+    std::string size_exc = "Wrong size!";
 
 public:
     Array();
-    Array(int size);
+    //Array(int size);
     ~Array();
     void print();
     void insert_front(int data);
