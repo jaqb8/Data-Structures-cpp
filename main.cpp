@@ -1,5 +1,6 @@
 #include "DoublyLinkedList.h"
 #include "Array.h"
+#include "Heap.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -9,10 +10,23 @@
 
 using namespace std;
 
+
 void menu_table(mt19937 generator);
 void menu_list(mt19937 generator);
 
 int main() {
+
+    Heap *h = new Heap(15);
+    for(int i = 1; i <= 15; i++) h->add(i);
+    h->print_heap_arr();
+    h->print_2D(0);
+    cout << endl << h->pop_root();
+    cout << endl;
+    h->print_2D(0);
+
+    delete h;
+
+    return 0;
     // random numbers generator
     mt19937 generator;
     generator.seed(time(0));
