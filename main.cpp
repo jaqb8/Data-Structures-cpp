@@ -1,32 +1,42 @@
 #include "DoublyLinkedList.h"
 #include "Array.h"
 #include "Heap.h"
+#include "BinarySearchTree.h"
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <conio.h>
 #include <random>
 #include <ctime>
+#include <chrono>
+#include <unistd.h>
+#include <Windows.h>
+#include "Test.h"
 
 using namespace std;
 
-
 void menu_table(mt19937 generator);
 void menu_list(mt19937 generator);
+void menu_heap(mt19937 generator);
+void menu_bst(mt19937 generator);
 
 int main() {
 
-    Heap *h = new Heap(15);
-    for(int i = 1; i <= 15; i++) h->add(i);
-    h->print_heap_arr();
-    h->print_2D(0);
-    cout << endl << h->pop_root();
-    cout << endl;
-    h->print_2D(0);
+//    DoublyLinkedList *l = new DoublyLinkedList();
+//    l->load_from_file("tab1.txt");
+//    l->delete_node(6);
+//    l->delete_node(10);
+//    l->delete_node(2);
+//    l->delete_node(4);
+//    l->delete_node(8);
+//    l->insert_at(2, 0);
+//    l->insert_at(6, 1);
+//    l->insert_at(8, 2);
+//    l->insert_at(4, 1);
+//    l->insert_at(0, 0);
+//    return 0;
 
-    delete h;
 
-    return 0;
     // random numbers generator
     mt19937 generator;
     generator.seed(time(0));
@@ -38,6 +48,7 @@ int main() {
         cout << "1.Tablica" << endl;
         cout << "2.Lista" << endl;
         cout << "3.Kopiec" << endl;
+        cout << "4.Drzewo BST" << endl;
         cout << "0.Wyjscie" << endl;
         cout << "Podaj opcje:";
         option = getche();
@@ -53,7 +64,11 @@ int main() {
                 break;
 
             case '3':
-                //menu_heap();
+                menu_heap(generator);
+                break;
+
+            case '4':
+                menu_bst(generator);
                 break;
         }
 
@@ -62,6 +77,7 @@ int main() {
 
     return 0;
 }
+
 
 void displayMenu(string info)
 {
@@ -73,14 +89,15 @@ void displayMenu(string info)
     cout << "4.Znajdz" << endl;
     cout << "5.Utworz losowo" << endl;
     cout << "6.Wyswietl" << endl;
-    cout << "7.Test (pomiary)" << endl;
+    //cout << "7.Pomiar - dodawanie" << endl;
     cout << "0.Powrot do menu" << endl;
     cout << "Podaj opcje:";
 }
 
 void menu_table(mt19937 generator)
 {
-    Array* arr = new Array();
+    //Test test;
+    Array arr;
     char opt;
     string fileName;
     int index, value;
@@ -95,7 +112,7 @@ void menu_table(mt19937 generator)
                 cin >> fileName;
 
                 try {
-                    arr->load_from_file(fileName);
+                    arr.load_from_file(fileName);
                     cout << "Wczytano z pliku." << endl;
                     break;
                 } catch (string &e) {
@@ -109,7 +126,7 @@ void menu_table(mt19937 generator)
                 cin >> index;
 
                 try {
-                    arr->delete_at(index);
+                    arr.delete_at(index);
                     cout << "Usunieto." << endl;
                     break;
                 } catch (string &e) {
@@ -124,7 +141,7 @@ void menu_table(mt19937 generator)
                 cin >> value;
 
                 try {
-                    arr->insert_at(value, index);
+                    arr.insert_at(value, index);
                     cout << "Dodano." << endl;
                     break;
                 } catch (string &e) {
@@ -137,7 +154,7 @@ void menu_table(mt19937 generator)
                 cin >> value;
 
                 try {
-                    arr->find(value) ? cout << "Znaleziono podana wartosc." << endl : cout << "Nie znalezniono podanej wartosci." << endl;
+                    arr.find(value) ? cout << "Znaleziono podana wartosc." << endl : cout << "Nie znalezniono podanej wartosci." << endl;
                     break;
                 } catch (string &e) {
                     cout << e << endl;
@@ -149,7 +166,7 @@ void menu_table(mt19937 generator)
                 cin >> value;
 
                 try {
-                    arr->generate_array(value, generator);
+                    arr.generate_array(value, generator);
                     cout << "Utworzono tablice." << endl;
                     break;
                 } catch (string &e) {
@@ -159,20 +176,25 @@ void menu_table(mt19937 generator)
 
             case '6':  //tutaj wyświetlanie tablicy
                 try {
-                    arr->print();
+                    arr.print();
                     cout << endl;
                     break;
                 } catch (string &e) {
                     cout << e << endl;
+                    break;
                 }
 
-            case '7': //tutaj nasza funkcja do eksperymentów (pomiary czasów i generowanie daneych) - nie będzie testowana przez prowadzącego
-                // można sobie tu dodać własne case'y
-                break;
+//            case '7':
+//                test.begin();
+//                arr.insert_at(50,400);
+//                test.stop();
+//                cout << "(ns): " << test.timeElapsed() << endl;
+//
+//                break;
         }
 
     } while (opt != '0');
-    delete arr;
+
 }
 
 void menu_list(mt19937 generator) {
@@ -180,6 +202,7 @@ void menu_list(mt19937 generator) {
     char opt;
     string file_name;
     int index, value;
+    Test t;
 
     do {
         displayMenu("--- LISTA ---");
@@ -200,9 +223,9 @@ void menu_list(mt19937 generator) {
 
             case '2': // delete node
                 try{
-                    cout << "Podaj indeks: ";
-                    cin >> index;
-                    list->delete_at(index);
+                    cout << "Podaj wartosc: ";
+                    cin >> value;
+                    list->delete_node(value);
                     cout << "Usunieto." << endl;
                     break;
                 } catch (string &e) {
@@ -261,8 +284,190 @@ void menu_list(mt19937 generator) {
                 } catch (string &e) {
                     cout << e << endl;
                 }
+
+//            case '7':
+//                t.begin();
+//                list->insert_front(5);
+//                t.stop();
+//                cout << "Elapsed: " << t.timeElapsed() << endl;
+//                break;
+
         }
     } while(opt != '0');
 
     delete list;
+}
+
+void menu_heap(mt19937 generator) {
+    Heap *heap = new Heap(10);
+    char opt;
+    string file_name;
+    int index, value;
+
+
+    do {
+        displayMenu("--- KOPIEC ---");
+        opt = getche();
+        cout << endl;
+        switch(opt) {
+            case '1': // load from file
+                try {
+                    cout << "Podaj nazwe zbioru: ";
+                    cin >> file_name;
+                    heap->load_from_file(file_name);
+                    cout << "Wczytano z pliku." << endl;
+                    break;
+                } catch (string &e) {
+                    cout << e << endl;
+                    break;
+                }
+
+            case '2': // delete root
+                try{
+                    cout << "Podaj wartosc: ";
+                    cin >> value;
+                    heap->delete_item(value);
+                    cout << "Usunieto." << endl;
+                    break;
+                } catch (string &e) {
+                    cout << e << endl;
+                    break;
+                }
+
+            case '3': // insert
+                cout << "Podaj wartosc: ";
+                cin >> value;
+
+                try {
+                    heap->add(value);
+                    cout << "Dodano wartosc." << endl;
+                    break;
+                } catch (string &e) {
+                    cout << e << endl;
+                    break;
+                }
+
+            case '4': // find
+                cout << "Podaj wartosc: ";
+                cin >> value;
+
+                try {
+                    heap->find(value) ? cout << "Znaleziono podana wartosc." << endl : cout << "Nie znaleziono podanej wartosci." << endl;
+                    break;
+                } catch(string &e) {
+                    cout << e << endl;
+                    break;
+                }
+
+
+            case '5': // create list
+                cout << "Podaj ilosc elementow kopca: ";
+                cin >> value;
+
+                try {
+                    heap->generate_heap(value, generator);
+                    cout << "Utworzono kopiec." << endl;
+                    break;
+                } catch (string &e) {
+                    cout << e << endl;
+                    break;
+                }
+
+
+            case '6': // print heap
+                try {
+                    heap->print_2D();
+                    cout << endl;
+                } catch (string &e) {
+                    cout << e << endl;
+                }
+
+//            case '7':
+//                t.begin();
+//                list->insert_front(5);
+//                t.stop();
+//                cout << "Elapsed: " << t.timeElapsed() << endl;
+//                break;
+        }
+    } while(opt != '0');
+
+    delete heap;
+}
+
+void menu_bst(mt19937 generator) {
+    BinarySearchTree *bst = new BinarySearchTree();
+    char opt;
+    string file_name;
+    int index, value;
+
+
+    do {
+        displayMenu("--- DRZEWO BST ---");
+        opt = getche();
+        cout << endl;
+        switch(opt) {
+            case '1': // load from file
+                try {
+                    cout << "Podaj nazwe pliku: ";
+                    cin >> file_name;
+                    bst->load_from_file(file_name);
+                    cout << "Wczytano z pliku." << endl;
+                    break;
+                } catch(string &e) {
+                    cout << e << endl;
+                    break;
+                }
+
+            case '2': // delete root
+                try {
+                    cout << "Podaj wartosc: ";
+                    cin >> value;
+                    bst->delete_node(value);
+                    cout << "Usunieto." << endl;
+                    break;
+                } catch(string &e) {
+                    cout << e << endl;
+                    break;
+                }
+
+            case '3': // insert
+                cout << "Podaj wartosc: ";
+                cin >> value;
+                bst->insert_node(value);
+                cout << "Dodano." << endl;
+                break;
+
+            case '4': // find
+                cout << "Podaj wartosc: ";
+                cin >> value;
+                bst->find(value) ? cout << "Znaleziono podana wartosc." << endl : cout << "Nie znaleziono podanej wartosci." << endl;
+                break;
+
+            case '5': // create list
+                try {
+                    cout << "Podaj ilosc elementow: ";
+                    cin >> value;
+                    bst->generate_bst(value, generator);
+                    cout << "Utworzono." << endl;
+                    break;
+                } catch(string &e) {
+                    cout << e << endl;
+                    break;
+                }
+
+            case '6':
+                bst->print_2D();
+                break;
+
+//            case '7':
+//                t.begin();
+//                list->insert_front(5);
+//                t.stop();
+//                cout << "Elapsed: " << t.timeElapsed() << endl;
+//                break;
+
+        }
+    } while(opt != '0');
+
+    delete bst;
 }

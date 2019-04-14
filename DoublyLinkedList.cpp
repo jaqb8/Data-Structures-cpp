@@ -87,15 +87,18 @@ void DoublyLinkedList::print_backward() {
 void DoublyLinkedList::insert_front(int data) {
     Node* new_node;
 
-    if(head == nullptr) throw(not_init_exc);
-    else {
-        new_node = new Node(data);
-        new_node->previous = nullptr;
-        new_node->next = head;
-        head->previous = new_node;
-        head = new_node;
+    new_node = new Node(data);
+    new_node->previous = nullptr;
+    new_node->next = head;
 
+    if(head != nullptr) {
+        head->previous = new_node;
+    } else {
+        tail = new_node;
     }
+
+    head = new_node;
+
 }
 
 void DoublyLinkedList::insert_end(int data) {
@@ -117,34 +120,33 @@ void DoublyLinkedList::insert_at(int data, int position) {
     Node* temp;
     int i;
 
-    if(head == nullptr) throw(not_init_exc);
-    else {
-        temp = head;
-        i = 1;
 
-        // set position of temp
-        while(i < position-1 && temp != nullptr) {
-            temp = temp->next;
-            i++;
-        }
+    temp = head;
+    i = 1;
 
-        if(position == 1) insert_front(data);
-        else if(temp == tail) insert_end(data);
-        else if(temp != nullptr) {
-            new_node = new Node(data);
-            new_node->previous = temp;
-            new_node->next = temp->next;
-
-            if(temp->next != nullptr) {
-                temp->next->previous = new_node;
-            }
-
-            temp->next = new_node;
-
-        } else {
-            throw(position_exc);
-        }
+    // set position of temp
+    while(i < position && temp != nullptr) {
+        temp = temp->next;
+        i++;
     }
+
+    if(position == 0) insert_front(data);
+    else if(temp == tail) insert_end(data);
+    else if(temp != nullptr) {
+        new_node = new Node(data);
+        new_node->previous = temp;
+        new_node->next = temp->next;
+
+        if(temp->next != nullptr) {
+            temp->next->previous = new_node;
+        }
+
+        temp->next = new_node;
+
+    } else {
+        throw(position_exc);
+    }
+
 }
 
 void DoublyLinkedList::delete_front() {
@@ -167,31 +169,44 @@ void DoublyLinkedList::delete_end() {
         to_delete = tail;
         tail = tail->previous;
         if(tail != nullptr) tail->next = nullptr;
+        else head = nullptr;
         delete to_delete;
     }
 }
 
-void DoublyLinkedList::delete_at(int position) {
+void DoublyLinkedList::delete_node(int value) {
+
+    if(!find(value)) throw(not_found);
 
     if (head != nullptr) {
         Node *current;
-        int i;
         current = head;
 
-        // set position of current
-        for (i = 1; i < position && current != nullptr; i++) {
-            current = current->next;
-        }
-
-        if (position == 1) delete_front();
-        else if (current == tail) delete_end();
-        else if (current != nullptr) {
-            current->previous->next = current->next;
-            current->next->previous = current->previous;
-            delete current;
-
-        } else {
-            throw (position_exc);
+        while(current != nullptr) {
+            if(current->data == value) {
+                if(current->next == nullptr) {
+//                    tail = tail->previous;
+//                    if(tail != nullptr) tail->next = nullptr;
+//                    delete current;
+                        delete_end();
+                        return;
+                }
+                else if(current->previous == nullptr) {
+//                    head = head->next;
+//                    if(head != nullptr) head->previous = nullptr;
+//                    delete current;
+                        delete_front();
+                        return;
+                }
+                else {
+                    current->previous->next = current->next;
+                    current->next->previous = current->previous;
+                    delete current;
+                    return;
+                }
+            } else {
+                current = current->next;
+            }
         }
     } else {
         throw(not_init_exc);
@@ -208,9 +223,8 @@ bool DoublyLinkedList::find(int to_find) {
             if (current->data == to_find) {
                 return true;
             } else current = current->next;
-
-            return false;
         }
+        return false;
     } else {
         throw(not_init_exc);
     }

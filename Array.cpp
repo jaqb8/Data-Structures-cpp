@@ -35,7 +35,6 @@ void Array::print() {
 }
 
 void Array::insert_front(int data) {
-    if(arr != nullptr || size != 0) {
         int* temp = new int[size+1];
         temp[0] = data;
         for(int i = 1; i < size+1; i++) {
@@ -45,9 +44,6 @@ void Array::insert_front(int data) {
         delete [] arr;
         size++;
         arr = temp;
-    } else {
-        throw(not_init_exc);
-    }
 }
 
 void Array::insert_end(int data) {
@@ -69,7 +65,7 @@ void Array::insert_end(int data) {
 void Array::insert_at(int data, int position) {
     if(arr != nullptr || size != 0) {
         if(position == 0) insert_front(data);
-        else if(position == size-1) insert_end(data);
+        else if(position == size) insert_end(data);
         else {
             if(position >= 0 && position <= size-1) {
                 int* temp = new int[size+1];

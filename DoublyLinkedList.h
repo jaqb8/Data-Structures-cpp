@@ -19,6 +19,7 @@ private:
     Node* head;
     Node* tail;
     std::string not_init_exc = "List not initialized!";
+    std::string not_found = "Value not found!";
     std::string position_exc = "Wrong position!";
     std::string size_exc = "Wrong size!";
     std::string file_exc = "Error - file not opened!";
@@ -34,7 +35,7 @@ public:
     void insert_at(int data, int position);
     void delete_front();
     void delete_end();
-    void delete_at(int position);
+    void delete_node(int value);
     bool find(int to_find);
     void load_from_file(std::string filename);
     void generate_list(int size, std::mt19937 generator);
